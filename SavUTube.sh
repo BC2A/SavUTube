@@ -3,13 +3,14 @@
 #/usr/local/bin/SavUTube.sh, ./savutube.png, ./youtube-dl
 #/usr/share/applications/SavUTube.desktop
 #Authored by walt.borovkoff@gmail.com
-#Copyright (C)  2020  Walter Borovkoff.
+#Copyright(C) 2020  Walter Borovkoff.
 #Permission is granted to copy, distribute and/or modify this
 #document under the terms of the GNU Free Documentation License.
-VeR=" v200401"
+VeR=" v200405"
 TiL="SavUTube  "
 IcN="savutube.png"
 TeM=$(mktemp -u)
+DeF=$"\"%(title)s\""
 NiN=$'\n'
 EtO="18000"	#Set Error time Out
 EdO=""	#Enable debug Output
@@ -71,7 +72,7 @@ if [[ ${PrM:0:1} = '~' ]]; then cd `cd ~/ `; PrM=".${PrM:1}"; fi
 if [ ! -z ${PrM##*/} ]; then FnO="${PrM##*/}"; PrM="${PrM%$FnO}"; fi
 cd "$PrM" 2>/dev/null
 if [ $? = 1 ]; then notify-send -i error -t $EtO "${TiL}Error, Path Not Found:${NiN}$PrM"
-	FlD=""; FnO=""; fi
+	FlD=""; FnO="$Def"; fi
 }
 # Find Icon Path
 IcN="${0%/*}/$IcN"
@@ -79,14 +80,14 @@ if [[ ${0:0:1} = '.' ]]; then IcN="$PWD${IcN:1}"; fi
 # Check Command-Line, Help, or Path & File OK
 if [ $# -ne 0 ]; then
 	if [ $1 = "-h" ] || [ $1 = "--help" ]; then HlP; exit 1
-	else PrM="$1"; CkM; fi
+	else PrM="$1"; CkM; DeF="$FnO"; fi
 fi
 # Main Loop Start
 while true; do
 	until [ "$FlD" != "" ]; do
 	MsG="Directory: \"$PWD\"\n"
 	if [ ! -z $FnO ]; then MsG="${MsG}File: \"$FnO\"\n"
-	else MsG="${MsG}Using default name.\n"; FnO=$"\"%(title)s\""; fi
+	else MsG="${MsG}Using default name.\n"; FnO="$DeF"; fi
 	MsG="${MsG}\nEnter: Youtube-URL  [ Option(s) ]  or enter \"help\""
 	FlD=`zenity 2>/dev/null\
 		--window-icon="$IcN" --title="$TiL$VeR" --width=520 --height=206\
@@ -135,20 +136,20 @@ while true; do
 	esac
 # Debugging Message
 	if [ ! -z $EdO ]; then
-	pause "$FlD $NiN $UrL $NiN $PrM $NiN $FnO $NiN $PWD $NiN $ChC $OpT $NiN"; fi
+	pause "$FlD $NiN $UrL $NiN $PrM $NiN $FnO $NiN $PWD $NiN $DeF $NiN $ChC $OpT $NiN"; fi
 # Progress Flag
 	mkfifo $TeM
 # Display Progress Bar
 	(< $TeM | zenity 2>/dev/null\
-		--progress  --width=520 --height=80 --pulsate --auto-close --no-cancel )\
+		--progress  --width=520 --height=100 --pulsate --auto-close --no-cancel )\
 			& (youtube-dl $OpT $UrL)
-		if [ $? = 0 ]; then notify-send -i info "$TiL${NiN}$MsG Completed from:${NiN}$UrL${NiN}Saved to: $PWD"
+		if [ $? = 0 ]; then notify-send -i info "$TiL${NiN}$MsG Completed from:${NiN}$UrL${NiN}Saved to: $PWD${NiN}$FnO"
 		else notify-send -i error -t $EtO "$TiL${NiN}$MsG Failed from:${NiN}$UrL${NiN}"; fi
 # Set Completed & Remove Flag
 		echo 'EOF' > $TeM
 		rm -f $TeM; FlD=""
  done
- FnO=""; UrL=""
+ FnO="$DeF"; UrL=""
 # Main Loop End
 done
 #	“Those who know, do not speak. Those who speak, do not know” ~ The Tao
