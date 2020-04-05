@@ -1,3 +1,8 @@
+# Authored by walt.borovkoff@gmail.com
+# Copyright(C) 2020, Walter Borovkoff.
+# Permission is granted to copy, distribute and/or modify this
+# document under the terms of the GNU Free Documentation License.
+
 # SavUTube is a simple, light weight graphical Ubuntu front end interface
 # for “ytdl-org / youtube-dl”, written in bash.  It has a very small foot
 # print and requires only three files, (the script itself 5.0kb, its Icon
@@ -8,31 +13,31 @@
 # using the included desktop file.
 
 
-		#########################################
-		#										#
-		#	Enter: Youtube-URL  [ Option(s) ]	#
-		#										#<-------
-		#										#		|
-		#					[Cancel]	[Start]	#		|
-		#########################################		|
-#								|			|			|
-#								|			|			|
-#		File Option Set?		|			|	Yes		|
-#								|			----------->
-#								|			|			^
-#								|			|			|
-#								V			V			|
-		#########################################		|
-		#										#		|
-		#	Choose: Download File Type Option.	#		|
-		#										#		|
-		#										#		|
-		#					[Exit]		[Next]	#		|
-		#########################################		|
-#								|			|			|
-#								|			|			|
-#								|			|			|
-#								X			-------------
+	#########################################
+	#					#
+	#   Enter: Youtube-URL  [ Option(s) ]	#
+	#					#<-------
+	#					#	|
+	#		[Cancel]	[Start]	#	|
+	#########################################	|
+#			   |		   |		|
+#			   |		   |		|
+#	File Option Set?   |		   |	Yes	|
+#			   |		   ----------->
+#			   |		   |		^
+#			   |		   |		|
+#			   V		   V		|
+	#########################################	|
+	#					#	|
+	#   Choose: Download File Type Option.	#	|
+	#					#	|
+	#					#	|
+	#		[Exit]		[Next]	#	|
+	#########################################	|
+#			   |		   |		|
+#			   |		   |		|
+#			   |		   |		|
+#			   X		   -------------
 
 To Install from your download folder, run this file.
 
