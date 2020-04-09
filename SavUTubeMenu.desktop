@@ -1,10 +1,10 @@
 [Desktop Entry]
 Version=1.1
 Type=Application
-Name=SavUTube v200405
+Name=SavUTube v200407
 Comment=GUI for downloading MP4 and MP3.
 Icon=/usr/local/bin/savutube.png
-Exec=SavUTube.sh  '~/Videos/'
+Exec=SavUTube.sh  "~/Videos/%(title)s"
 Path=/home/
 Categories=AudioVideo;AudioVideoEditing;
 GenericName=SavUTube

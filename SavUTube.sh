@@ -6,14 +6,14 @@
 #Copyright(C) 2020  Walter Borovkoff.
 #Permission is granted to copy, distribute and/or modify this
 #document under the terms of the GNU Free Documentation License.
-VeR=" v200405"
+VeR=" v200407"
 TiL="SavUTube  "
 IcN="savutube.png"
 TeM=$(mktemp -u)
-DeF=$"\"%(title)s\""
 NiN=$'\n'
-EtO="18000"	#Set Error time Out
-EdO=""	#Enable debug Output
+EtO="18000"	#Error time out
+DeF="%(title)s"	#Default template
+EdO=""	#Enable debug output
 pause() { read -p "$* Continue? (Y/N): " cNf && [[ $cNf == [yY] ]] || exit 1; }
 # Display Help
 HlP () {
@@ -24,31 +24,34 @@ local bLk="Usage:  $TiL[ Option(s) ]
 	[ ~/path/ | ./Relative/path/ | /absolute/path/ ]
 
 2)	Set the output file name.
-	[ output-filename | \"output-template\" ]
+	[ output-filename | output-template ]
 
 3)	Both options together: [ option1/option2 ]
 
-Exmple:
-		SavUTube.sh ~/Videos/Outputfile
+Examples:
+	Menu command: ( Exec = SavUTube.sh ~/Videos/ )
+	Added into the \"savutube.desktop\" file, to set the
+	default directory.
 
-		Menu command: ( Exec = SavUTube.sh ~/Videos/ )
-		Added into the \"savutube.desktop\" file, to set the
-		default directory at startup.
+	https://youtube.com/watch?v=AbCdEfGhIjK ~/Music/out-%(id)s
 
-		https://www.youtube.com/watch?v=AbCdEfGhIjK ~/Music/outputfile
-		Entered in to the [\"URL\"] input box will download to users
-		Music directory, using \"outputfile\" as the filename.
+	Entered in to the [\"URL\"] dialog box will download to users
+	Music directory, using \"out-AbCdEfGhIjK\" as the filename.
+	Options are entered after the \"URL\" followed by a space.
+
+	SavUTube.sh ~/URFolder/URFile-\"%(title)s-%(id)s\"
+
+	Entered on the command line will set the interim
+	defaults, template must be in quotes.
 
 Notes:
-	Options are entered after the \"URL\" followed by a space,
-	and may be entered on the command line.
-	A template must be in quotes.
-	If no options are given the title will used as the filename.
+	If no options are given the default will be
+	used as the filename, Currently:  \$DeF = \"$DeF\".
 	The Icon must be in the same directory as the Script.
 	A \"~\" equals the current user home directory.
 	The \"|\" means this \"or\" that choice.
-	From the command line enter:
-		\"SavUTube -h or --help\" to display this dialog.
+
+	\"SavUTube -h or --help\" will display this dialog.
 
 
 $TiL$VeR"
@@ -71,23 +74,23 @@ CkM () {
 if [[ ${PrM:0:1} = '~' ]]; then cd `cd ~/ `; PrM=".${PrM:1}"; fi
 if [ ! -z ${PrM##*/} ]; then FnO="${PrM##*/}"; PrM="${PrM%$FnO}"; fi
 cd "$PrM" 2>/dev/null
-if [ $? = 1 ]; then notify-send -i error -t $EtO "${TiL}Error, Path Not Found:${NiN}$PrM"
-	FlD=""; FnO="$Def"; fi
+if [ $? = 1 ]; then FlD=""; FnO=""
+	notify-send -i error -t $EtO "${TiL}Error, Path Not Found:${NiN}$PrM"; fi
 }
 # Find Icon Path
 IcN="${0%/*}/$IcN"
 if [[ ${0:0:1} = '.' ]]; then IcN="$PWD${IcN:1}"; fi
-# Check Command-Line, Help, or Path & File OK
+# Check Command-Line, Help, or Get Path & Change Default
 if [ $# -ne 0 ]; then
-	if [ $1 = "-h" ] || [ $1 = "--help" ]; then HlP; exit 1
-	else PrM="$1"; CkM; DeF="$FnO"; fi
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then HlP; exit 1
+	else PrM="$1"; CkM; if [[ ${FnO:0:1} = '%' ]]; then DeF=$FnO; fi
+	fi
 fi
 # Main Loop Start
 while true; do
+	FnO=$DeF
 	until [ "$FlD" != "" ]; do
-	MsG="Directory: \"$PWD\"\n"
-	if [ ! -z $FnO ]; then MsG="${MsG}File: \"$FnO\"\n"
-	else MsG="${MsG}Using default name.\n"; FnO="$DeF"; fi
+	MsG="Directory: \"$PWD\"${NiN}File or Template: \"$FnO\"\n"
 	MsG="${MsG}\nEnter: Youtube-URL  [ Option(s) ]  or enter \"help\""
 	FlD=`zenity 2>/dev/null\
 		--window-icon="$IcN" --title="$TiL$VeR" --width=520 --height=206\
@@ -135,21 +138,19 @@ while true; do
 		exit -1 ;;
 	esac
 # Debugging Message
-	if [ ! -z $EdO ]; then
-	pause "$FlD $NiN $UrL $NiN $PrM $NiN $FnO $NiN $PWD $NiN $DeF $NiN $ChC $OpT $NiN"; fi
+	if [ ! -z $EdO ]; then pause "$FlD $NiN $UrL $NiN $PrM $NiN $FnO $NiN $PWD $NiN $DeF $NiN $ChC $OpT $NiN"; fi
 # Progress Flag
 	mkfifo $TeM
 # Display Progress Bar
 	(< $TeM | zenity 2>/dev/null\
 		--progress  --width=520 --height=100 --pulsate --auto-close --no-cancel )\
 			& (youtube-dl $OpT $UrL)
-		if [ $? = 0 ]; then notify-send -i info "$TiL${NiN}$MsG Completed from:${NiN}$UrL${NiN}Saved to: $PWD${NiN}$FnO"
+		if [ $? = 0 ]; then notify-send -i info "$TiL${NiN}$MsG Completed from:${NiN}$UrL${NiN}Saved to: $PWD"
 		else notify-send -i error -t $EtO "$TiL${NiN}$MsG Failed from:${NiN}$UrL${NiN}"; fi
 # Set Completed & Remove Flag
 		echo 'EOF' > $TeM
-		rm -f $TeM; FlD=""
+		rm -f $TeM; FlD=""; UrL=""
  done
- FnO="$DeF"; UrL=""
 # Main Loop End
 done
 #	“Those who know, do not speak. Those who speak, do not know” ~ The Tao
