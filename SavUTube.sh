@@ -37,8 +37,8 @@ Example:
 
 Menu Setup:
 	\"Exec = SavUTube.sh ~/Videos/\"
-	Edited into the \"savutube.desktop\" file, to set the default
-	directory to \"Videos\".
+	Will instruct the \"savutube.desktop\" file, to set the default
+	to the users \"Videos\" directory.
 
 Shell Command:
 	 SavUTube.sh \"~/URFolder/URFile-%(title)s-%(id)s\"
