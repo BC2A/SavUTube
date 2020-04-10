@@ -1,2 +1,2 @@
 # SavUTube
-Youtube-DL GUI
+Youtube-DL GUI for Ubuntu Linux
