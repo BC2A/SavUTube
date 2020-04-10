@@ -9,7 +9,7 @@
 DeF="%(title)s"	#DeFault template
 EtO="18000"	#Error time Out
 EdB=""		#Enable deBugging
-VeR=" v200407"
+VeR=" v200409"
 TiL="SavUTube  "
 IcN="savutube.png"
 TeM=$(mktemp -u)
@@ -37,8 +37,8 @@ Example:
 
 Menu Setup:
 	\"Exec = SavUTube.sh ~/Videos/\"
-	Will instruct the \"savutube.desktop\" file, to set the default
-	to the users \"Videos\" directory.
+	Edited into the \"savutube.desktop\" file, to set the default
+	directory to \"Videos\".
 
 Shell Command:
 	 SavUTube.sh \"~/URFolder/URFile-%(title)s-%(id)s\"
