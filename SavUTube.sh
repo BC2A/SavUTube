@@ -6,19 +6,19 @@
 #Copyright(C) 2020  Walter Borovkoff.
 #Permission is granted to copy, distribute and/or modify this
 #document under the terms of the GNU Free Documentation License.
+DeF="%(title)s"	#DeFault template
+EtO="18000"	#Error time Out
+EdB=""		#Enable deBugging
 VeR=" v200407"
 TiL="SavUTube  "
 IcN="savutube.png"
 TeM=$(mktemp -u)
 NiN=$'\n'
-EtO="18000"	#Error time out
-DeF="%(title)s"	#Default template
-EdO=""	#Enable debug output
 pause() { read -p "$* Continue? (Y/N): " cNf && [[ $cNf == [yY] ]] || exit 1; }
 # Display Help
 HlP () {
 local hLp=""
-local bLk="Usage:  $TiL[ Option(s) ]
+local bLk="Usage:	$TiL  [ Option(s) ]
 
 1)	Change working directory before processing.
 	[ ~/path/ | ./Relative/path/ | /absolute/path/ ]
@@ -26,32 +26,34 @@ local bLk="Usage:  $TiL[ Option(s) ]
 2)	Set the output file name.
 	[ output-filename | output-template ]
 
-3)	Both options together: [ option1/option2 ]
+3)	Both options together: [[ option1 ][ option2 ]]
 
-Examples:
-	Menu command: ( Exec = SavUTube.sh ~/Videos/ )
-	Added into the \"savutube.desktop\" file, to set the
-	default directory.
+Example:
+	\"https://youtube.com/watch?v=AbCdEfGhIjK  ~/Music/out-%(id)s\"
 
-	https://youtube.com/watch?v=AbCdEfGhIjK ~/Music/out-%(id)s
-
-	Entered in to the [\"URL\"] dialog box will download to users
+	Entered in to the \"URL\" input box will download to users
 	Music directory, using \"out-AbCdEfGhIjK\" as the filename.
 	Options are entered after the \"URL\" followed by a space.
 
-	SavUTube.sh ~/URFolder/URFile-\"%(title)s-%(id)s\"
+Menu Setup:
+	\"Exec = SavUTube.sh ~/Videos/\"
+	To instruct the \"savutube.desktop\" file, to set the default
+	directory to \"Videos\".
 
-	Entered on the command line will set the interim
-	defaults, template must be in quotes.
+Shell Command:
+	 SavUTube.sh \"~/URFolder/URFile-%(title)s-%(id)s\"
+
+	Entered on the command line will set the interim defaults,
+	and options must be in quotes.
+
+	SavUTube -h or --help to display this dialog.
 
 Notes:
-	If no options are given the default will be
-	used as the filename, Currently:  \$DeF = \"$DeF\".
+	If no options are given the current directory and template,
+	\"$DeF\" will be used.
 	The Icon must be in the same directory as the Script.
 	A \"~\" equals the current user home directory.
 	The \"|\" means this \"or\" that choice.
-
-	\"SavUTube -h or --help\" will display this dialog.
 
 
 $TiL$VeR"
@@ -138,7 +140,7 @@ while true; do
 		exit -1 ;;
 	esac
 # Debugging Message
-	if [ ! -z $EdO ]; then pause "$FlD $NiN $UrL $NiN $PrM $NiN $FnO $NiN $PWD $NiN $DeF $NiN $ChC $OpT $NiN"; fi
+	if [ ! -z $EdB ]; then pause "$FlD $NiN $UrL $NiN $PrM $NiN $FnO $NiN $PWD $NiN $DeF $NiN $ChC $OpT $NiN"; fi
 # Progress Flag
 	mkfifo $TeM
 # Display Progress Bar
