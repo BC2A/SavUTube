@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.1
 Type=Application
-Name=SavUTube v200409
+Name=SavUTube v200410
 Comment=Youtube-DL GUI for downloading MP4 and MP3.
 Icon=/usr/local/bin/savutube.png
 Exec=SavUTube.sh  "~/Videos/%(title)s-%(id)s"

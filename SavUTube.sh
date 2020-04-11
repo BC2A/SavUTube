@@ -9,7 +9,7 @@
 DeF="%(title)s"	#DeFault template
 EtO="18000"	#Error time Out
 EdB=""		#Enable deBugging
-VeR=" v200409"
+VeR=" v200410"
 TiL="SavUTube  "
 IcN="savutube.png"
 TeM=$(mktemp -u)
@@ -18,7 +18,7 @@ pause() { read -p "$* Continue? (Y/N): " cNf && [[ $cNf == [yY] ]] || exit 1; }
 # Display Help
 HlP () {
 local hLp=""
-local bLk="Usage:	$TiL  [ Option(s) ]
+local bLk="Usage:	URL  [ Option(s) ]
 
 1)	Change working directory before processing.
 	[ ~/path/ | ./Relative/path/ | /absolute/path/ ]
@@ -28,32 +28,26 @@ local bLk="Usage:	$TiL  [ Option(s) ]
 
 3)	Both options together: [[ option1 ][ option2 ]]
 
-Example:
-	\"https://youtube.com/watch?v=AbCdEfGhIjK  ~/Music/out-%(id)s\"
-
-	Entered in to the \"URL\" input box will download to users
-	Music directory, using \"out-AbCdEfGhIjK\" as the filename.
-	Options are entered after the \"URL\" followed by a space.
-
-Menu Setup:
-	\"Exec = SavUTube.sh ~/Videos/\"
-	Will instruct the \"savutube.desktop\" file, to set the default
-	to the users \"Videos\" directory.
-
-Shell Command:
-	 SavUTube.sh \"~/URFolder/URFile-%(title)s-%(id)s\"
-
-	Entered on the command line will set the interim defaults,
-	and options must be in quotes.
-
-	SavUTube -h or --help to display this dialog.
+4)	Display this dialog. [ -h | --help ]
 
 Notes:
-	If no options are given the current directory and template,
-	\"$DeF\" will be used.
-	The Icon must be in the same directory as the Script.
-	A \"~\" equals the current user home directory.
+	A \"~\" equals the current users home directory.
 	The \"|\" means this \"or\" that choice.
+	The current directory and template, is
+	\"$PWD\"	\"$DeF\".
+
+Examples:
+	\"https://youtube.com/watch?v=AbCdEfG  ~/Music/Xyz-%(id)s\"
+
+	Entered in to the \"URL\" dialog-box will download to users
+	Music directory, using \"Xyz-AbCdEfG\" as the filename.
+	Options are entered after the \"URL\" followed by a space.
+
+Shell Command:
+	SavUTube.sh \"~/URFolder/URFile-URTemplate\"
+
+	Entered on the command line will set the interim defaults,
+	options must be in quotes.
 
 
 $TiL$VeR"
@@ -92,8 +86,8 @@ fi
 while true; do
 	FnO=$DeF
 	until [ "$FlD" != "" ]; do
-	MsG="Directory: \"$PWD\"${NiN}File or Template: \"$FnO\"\n"
-	MsG="${MsG}\nEnter: Youtube-URL  [ Option(s) ]  or enter \"help\""
+	MsG="Directory: \"$PWD\"${NiN}File and Template: \"$FnO\"\n"
+	MsG="${MsG}\nEnter: Video-URL  [ Option(s) ]  or enter \"help\""
 	FlD=`zenity 2>/dev/null\
 		--window-icon="$IcN" --title="$TiL$VeR" --width=520 --height=206\
 		--entry --entry-text=$UrL\
