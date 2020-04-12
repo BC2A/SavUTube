@@ -1,0 +1,130 @@
+# To Install goto your download folder, mark this file as executable
+# and using a Terminal run it. (try renameing it 1st to "Readme.sh")
+# or as an alternative copy to ~/.local/share/applications/
+
+# Authored by walt.borovkoff@gmail.com
+# Copyright(C) 2020, Walter Borovkoff.
+# Permission is granted to copy, distribute and/or modify this
+# document under the terms of the GNU Free Documentation License.
+
+# SavUTube is a simple, light weight graphical Ubuntu front end interface
+# for “ytdl-org / youtube-dl”, using zenity, and written in bash.  It has
+# a very small footprint and requires only three files, (the script itself
+# 4.8kb, its Icon 3.6kb, and the menu.desktop file, 280b), and was written
+# to be run on small systems with limited resources.  The optional command
+# line parameters can be used to set the default download directory, file
+# name, and youtube-dl options.  This allows it to be easily added and
+# launched from the menu using the included desktop file.  Tested using
+# Ubuntu & Xubuntu 18.04, on a Lenovo Ideapad 100S-141BR.
+
+# Run this file using a Terminal to install SavUTube.	#
+#########################################################
+echo "This will copy \"SavUTube.sh & savutube.png\" to /usr/local/bin/"
+echo "  and \"SavUTubeMenu.desktop\" to /usr/share/applications/"
+read -p "Continue? (Y/N): " cNf && [[ $cNf == [yY] ]] || exit 1;
+
+# 1st)	copy: "SavUTube.sh & savutube.png" to "/usr/local/bin/"
+sudo cp SavUTube.sh /usr/local/bin/
+sudo cp savutube.png /usr/local/bin/
+sudo chmod a+rx /usr/local/bin/SavUTube.sh
+
+# 2nd)	copy "SavUTubeMenu.desktop" to "/usr/share/applications/"
+sudo cp SavUTubeMenu.desktop /usr/share/applications/
+
+echo "Would you like to install/update-youtube-dl"
+read -p "Continue? (Y/N): " cNf && [[ $cNf == [yY] ]] || exit 1;
+
+# 3rd Uninstall the old, and Install the latest "youtube-dl"
+sudo apt-get remove youtube-dl
+sudo wget https://yt-dl.org/downloads/latest/youtube-dl -O /usr/local/bin/youtube-dl
+sudo chmod a+rx /usr/local/bin/youtube-dl
+hash -r
+
+# 4th Install "python-minimal"
+sudo apt-get install python-minimal
+
+# 5th Install "ffmpeg"
+sudo apt-get install ffmpeg
+exit
+#########################################################
+#  Usage:	URL  [ Option(s) ]			#
+
+# 1)	Change working directory before processing.
+#	[ ~/path/ | ./Relative/path/ | /absolute/path/ ]
+
+# 2)	Set the output file name.
+#	[ output-filename | output-template ]
+
+# 3)	Both options together: [[ option1 ][ option2 ]]
+
+# 4)	Display this dialog. [ -h | --help ]
+
+# Examples:
+#	\"https://youtube.com/watch?v=AbCdEfGhIjK  ~/Music/Xyz-%(id)s\"
+
+#	Entered in to the "URL" dialog-box will download to users
+#	Music directory, using "Xyz-AbCdEfGhIjK" as the filename.
+#	Options are entered after the "URL" followed by a space.
+
+# Shell Command:
+#	SavUTube.sh "~/UR_Folder/UR_File-UR_Template"
+
+#	Entered on the command line will set the interim defaults,
+#	and the options must be in quotes.
+
+# Menu Setup:
+#	Add "Exec = SavUTube.sh ~/Videos/%(title)s-%(id)s" entry,
+#	will instruct the "SavUTubeMenu.desktop" file, to set the
+#	defaults to the users "Videos" directory, using the
+#	"title-dash-video-id" as the output-file name.
+
+# Notes:
+# 	If no options are given the current directory and template,
+# 	will be used, ie "$PWD/%(title)s-%(id)s".
+# 	The Icon must be in the same directory as the Script.
+# 	A "~" equals the current user home directory.
+# 	The "|" means this "or" that choice.
+
+#	See:
+#	"Output Template" at https://github.com/ytdl-org/youtube-dl
+#	https://github.com/ytdl-org/youtube-dl/blob/master/README.md#how-do-i-update-youtube-dl
+#	
+
+#			 begin
+#			   |
+#			   V
+	#########################################
+	#					#
+	#  Enter: Video-URL  [ Option(s) ]	#
+	#					#<--------------.
+	#					#		|
+	#		[Cancel]	[Start]	#		|
+	#########################################		|
+#			   |		   |			|
+#			   |		   |			|
+#	File Type Set?	   |		   |	Yes		|
+#			   |		   ------------>.	|
+#			   |		   |		|	|
+#			   V		   V		|	|
+	#########################################	|	|
+	#					#	|	|
+	#  Choose: Type of Download.		#	|	|
+	#					#	|	|
+	#					#	|	|
+	#		[Exit]		[Next]	#	|	|
+	#########################################	|	|
+#			   |		   |		|	|
+#			   |		   |		|	|
+#			   |		   |<-----------'	|
+#			  end		   |			|
+#					   |			|
+#					   V			|
+		#########################################	|
+		#					#	|
+		#  Download & Display Progress Bar.	#	|
+		#					#	|
+		#########################################	|
+#					   |			|
+#					   |			|
+#					   '--------------------'
+0412.10.2
